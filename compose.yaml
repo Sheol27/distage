@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  server:
+    build: ./server
+    ports:
+      - "50051:50051"
+    
+  client:
+    depends_on:
+      - server
+    build: ./client
+    deploy:
+      replicas: 100
+    
+   

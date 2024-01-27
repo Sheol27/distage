@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package timestamp;
+
+// The timestamp service definition.
+service TimestampService {
+  // Sends a creation timestamp and receives a role
+  rpc SendTimestamp (TimestampRequest) returns (RoleResponse) {}
+}
+
+// The request message containing the creation timestamp.
+message TimestampRequest {
+  int64 creation_timestamp = 1;
+  string uuid = 2;
+}
+
+// The response message containing the role.
+message RoleResponse {
+  string role = 1;
+  string uuid = 2;
+}
