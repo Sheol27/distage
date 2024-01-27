@@ -11,13 +11,13 @@ defmodule Client.Worker do
     {:ok, channel} = GRPC.Stub.connect("server:50051")
     state = %{channel: channel, uuid: ""}
 
-    send_heartbeat(state)
+    send_heartbeat()
     {:ok, state}
   end
 
   def handle_info(:heartbeat, state) do
     new_state = send_timestamp(state.channel, state.uuid)
-    send_heartbeat(new_state)
+    send_heartbeat()
 
     {:noreply, new_state}
   end
@@ -32,7 +32,7 @@ defmodule Client.Worker do
     %{channel: channel, uuid: response.uuid}
   end
 
-  defp send_heartbeat(_state) do
+  defp send_heartbeat() do
     Process.send_after(self(), :heartbeat, @heartbeat_interval)
   end
 end
