@@ -1,15 +1,29 @@
 version: '3.9'
 services:
-  server:
-    build: ./server
-    ports:
-      - "50051:50051"
     
   client:
     depends_on:
-      - server
-    build: ./client
-    deploy:
-      replicas: 100
+      - frontend
+    build: ./apps/client
+    environment:
+     - WS_URL="ws://localhost:4124/socket"
     
-   
+  backend:
+    build: ./apps/backend
+    ports:
+      - "4123:4000"
+      - 50051:50051
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./apps/backend
+          target: /app
+  
+  frontend:
+    depends_on:
+      - backend
+    build: ./web/frontend
+    ports:
+      - 5174:5173
+    volumes:
+      - ./web/frontend/src:/app/src
