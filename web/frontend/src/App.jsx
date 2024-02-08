@@ -1,34 +1,33 @@
-import { Socket } from 'phoenix';
 import React, { useEffect, useState } from 'react';
+import { Socket } from 'phoenix';
 import "./App.css";
 
-function App() {
+const WS_URL = "ws://localhost:4123/socket";
 
-  // TODO: ugly, remove from code
-  const WS_URL = "ws://localhost:4123/socket";
-  const [channel, setChannel] = useState(null);
+function App() {
   const [messages, setMessages] = useState([]);
 
+
   useEffect(() => {
-    let socket = new Socket(WS_URL, { params: { userToken: "TOKEN" } });
+    const userToken = "TOKEN"; // Retrieve from environment
+    const socket = new Socket(WS_URL, { params: { userToken } });
     socket.connect();
 
     const infoChannel = socket.channel("clients:info", {});
+
     infoChannel.join()
-      .receive("ok", resp => { console.log("Joined successfully", resp); })
-      .receive("error", resp => { console.log("Unable to join", resp); });
+      .receive("ok", resp => console.log("Joined successfully", resp))
+      .receive("error", resp => console.log("Unable to join", resp));
 
-    setChannel(infoChannel);
+    const processClients = (clients) => Object.entries(clients).map(([id, details]) => ({ id, ...details }));
 
-    infoChannel.on("clients", payload => {
-      console.log("Received clients", payload);
-      setMessages(messages => [...messages, payload.body]);
-    });
+    const eventHandlers = [
+      { event: "clients", handler: payload => setMessages(processClients(payload)) },
+      { event: "new_client", handler: payload => setMessages(messages => [...messages, payload]) },
+      { event: "client_removed", handler: payload => setMessages(messages => messages.filter(message => message.id !== payload.id)) },
+    ];
 
-    infoChannel.on("new_client", payload => {
-      console.log("Received new client", payload);
-      setMessages(messages => [...messages, payload.body]);
-    });
+    eventHandlers.forEach(({ event, handler }) => infoChannel.on(event, handler));
 
     return () => {
       infoChannel.leave();
@@ -37,13 +36,11 @@ function App() {
   }, []);
 
   return (
-    <>
-      <div>
-        {messages.map((msg, index) => (
-          <p key={index}>{msg}</p>
-        ))}
-      </div>
-    </>
+    <div>
+      {messages.map((msg, index) => (
+        <p key={index}>{msg.id}</p> // Assuming msg is an object, adjust if it's not
+      ))}
+    </div>
   );
 }
 

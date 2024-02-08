@@ -14,9 +14,8 @@ defmodule BackendWeb.ClientsChannel do
   @impl true
   def handle_info(:send_clients, socket) do
     clients = Backend.Registry.get_state()
-    keys = Map.keys(clients)
 
-    push(socket, "clients", %{body: keys})
+    push(socket, "clients", clients)
     {:noreply, socket}
   end
 
