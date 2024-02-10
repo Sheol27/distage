@@ -10,7 +10,8 @@ defmodule Client.Application do
     children = [
       # Starts a worker by calling: Client.Worker.start_link(arg)
       # {Client.Worker, arg}
-      Client.Worker
+      Client.Worker,
+      Client.LogServer
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
