@@ -40,15 +40,12 @@ defmodule Backend.Registry do
     client_info = Map.get(state, client_id, %{})
     client_info = Map.put(client_info, :role, role)
     client_info = Map.put(client_info, :timestamp, timestamp)
+    client_info = Map.put(client_info, :status, :running)
 
     new_state = Map.put(state, client_id, client_info)
 
     unless Map.has_key?(state, client_id) do
-      BackendWeb.Endpoint.broadcast("clients:info", "new_client", %{
-        id: client_id,
-        role: role,
-        timestamp: timestamp
-      })
+      BackendWeb.Endpoint.broadcast("clients:info", "new_client", %{client_id => client_info})
     end
 
     {:noreply, new_state}
@@ -71,11 +68,21 @@ defmodule Backend.Registry do
       Enum.reduce(state, %{}, fn {client_id, client_info}, acc ->
         time_diff = DateTime.diff(current_time, client_info.timestamp)
 
-        if time_diff <= 1 do
-          Map.put(acc, client_id, client_info)
-        else
-          BackendWeb.Endpoint.broadcast("clients:info", "client_removed", %{id: client_id})
-          acc
+        cond do
+          time_diff <= 1 ->
+            Map.put(acc, client_id, client_info)
+
+          time_diff > 1 && client_info.status == :running ->
+            updated_info = Map.put(client_info, :status, :stopped)
+
+            BackendWeb.Endpoint.broadcast("clients:info", "client_stopped", %{
+              client_id => updated_info
+            })
+
+            Map.put(acc, client_id, updated_info)
+
+          time_diff > 1 && client_info.status == :stopped ->
+            Map.put(acc, client_id, client_info)
         end
       end)
 
