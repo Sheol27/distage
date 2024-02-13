@@ -88,8 +88,6 @@ defmodule Backend.Registry do
 
     heart_beat()
 
-    IO.inspect(state)
-
     {:noreply, new_state}
   end
 end

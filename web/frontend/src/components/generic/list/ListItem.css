@@ -1,0 +1,25 @@
+.list-item-container {
+  display: flex;
+  height: 4rem;
+  align-items: center;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border: 0.1rem solid;
+  border-radius: 0.5rem;
+  justify-content: space-between;
+  background-color: #33415c;
+  border-color: #001233;
+}
+
+.list-item-text {
+  max-width: 70%;
+}
+
+.list-item-label {
+  max-width: 30%;
+  text-align-last: end;
+}
+
+.list-item-selected {
+  background-color: #002855;
+}
