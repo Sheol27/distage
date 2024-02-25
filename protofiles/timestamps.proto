@@ -12,6 +12,7 @@ service TimestampService {
 message TimestampRequest {
   int64 creation_timestamp = 1;
   string uuid = 2;
+  string host_name = 3;
 }
 
 // The response message containing the role.

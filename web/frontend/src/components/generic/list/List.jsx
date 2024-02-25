@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ListItem from "./ListItem";
 
 function List({ items, selectedItemId, onItemSelected }) {
@@ -10,7 +10,7 @@ function List({ items, selectedItemId, onItemSelected }) {
         <ListItem
           key={x.id}
           index={i}
-          mainText={x.id}
+          mainText={x.hostname}
           labelText={x.status}
           labelType={getType(x.status)}
           selected={i === selectedItemId}

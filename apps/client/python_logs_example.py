@@ -10,7 +10,6 @@ def send_log(socket_path, message):
             sock.sendall(message.encode("utf-8"))
         except socket.error as msg:
             print(f"Socket error: {msg}")
-            sys.exit(1)
 
 
 if __name__ == "__main__":

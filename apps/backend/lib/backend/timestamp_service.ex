@@ -1,4 +1,4 @@
-defmodule Backend.Listener do
+defmodule Backend.TimestampService do
   use GRPC.Server, service: Timestamp.TimestampService.Service
 
   def send_timestamp(request, _stream) do
@@ -11,7 +11,7 @@ defmodule Backend.Listener do
         uuid -> uuid
       end
 
-    GenServer.cast(Backend.Registry, {:register, client_id, role})
+    GenServer.cast(Backend.Registry, {:register, client_id, role, request.host_name})
 
     %Timestamp.RoleResponse{role: role, uuid: client_id}
   end

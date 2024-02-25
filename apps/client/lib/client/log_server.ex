@@ -53,11 +53,24 @@ defmodule Client.LogServer do
     case :socket.recv(client, 0) do
       {:ok, data} when data != "" ->
         msg = String.trim(data)
-        IO.puts("Received message: #{msg}")
+
+        log = process_log_message(msg)
+        Client.Worker.send_logs(log)
+
         receive_data(client)
 
       _ ->
         :ok
     end
+  end
+
+  defp process_log_message(msg) do
+    [source, message] = String.split(msg, ":", parts: 2)
+
+    %Log.LogMessage{
+      message: message,
+      timestamp: DateTime.utc_now() |> DateTime.to_unix(),
+      source: source
+    }
   end
 end

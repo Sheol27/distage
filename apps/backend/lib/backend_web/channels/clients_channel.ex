@@ -12,6 +12,16 @@ defmodule BackendWeb.ClientsChannel do
   end
 
   @impl true
+  def join("clients:" <> id, payload, socket) do
+    if authorized?(payload) do
+      IO.puts("Joined #{id}")
+      {:ok, socket}
+    else
+      {:error, %{reason: "unauthorized"}}
+    end
+  end
+
+  @impl true
   def handle_info(:send_clients, socket) do
     clients = Backend.Registry.get_state()
 

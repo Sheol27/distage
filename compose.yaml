@@ -1,15 +1,19 @@
-version: '3.9'
+version: "3.9"
 services:
-    
   client:
     depends_on:
       - frontend
     build: ./apps/client
     environment:
-     - WS_URL="ws://localhost:4124/socket"
+      - WS_URL="ws://localhost:4124/socket"
     deploy:
       replicas: 2
-    
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./apps/client
+          target: /app
+
   backend:
     build: ./apps/backend
     ports:
@@ -20,7 +24,7 @@ services:
         - action: sync+restart
           path: ./apps/backend
           target: /app
-  
+
   frontend:
     depends_on:
       - backend

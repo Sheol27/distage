@@ -34,13 +34,14 @@ defmodule Backend.Registry do
   @doc """
   Register new clients, notifying the channel.
   """
-  def handle_cast({:register, client_id, role}, state) do
+  def handle_cast({:register, client_id, role, host_name}, state) do
     timestamp = DateTime.utc_now()
 
     client_info = Map.get(state, client_id, %{})
     client_info = Map.put(client_info, :role, role)
     client_info = Map.put(client_info, :timestamp, timestamp)
     client_info = Map.put(client_info, :status, :running)
+    client_info = Map.put(client_info, :hostname, host_name)
 
     new_state = Map.put(state, client_id, client_info)
 

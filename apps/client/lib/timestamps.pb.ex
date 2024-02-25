@@ -5,6 +5,7 @@ defmodule Timestamp.TimestampRequest do
 
   field :creation_timestamp, 1, type: :int64, json_name: "creationTimestamp"
   field :uuid, 2, type: :string
+  field :host_name, 3, type: :string, json_name: "hostName"
 end
 
 defmodule Timestamp.RoleResponse do
