@@ -28,8 +28,8 @@ services:
   frontend:
     depends_on:
       - backend
-    build: ./web/frontend
+    build: ./web
     ports:
       - 5174:5173
     volumes:
-      - ./web/frontend/src:/app/src
+      - ./web/src:/app/src
