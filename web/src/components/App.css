@@ -7,24 +7,46 @@
 .sidebar {
   width: 25%;
   height: 100%;
-  background: #5c677d;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid;
   border-radius: 0.1rem;
-  max-height: 100%;
+}
+
+.sidebar-header {
+  background-color: #353535;
+  padding: 1rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  color: #ffffff;
+}
+
+.sidebar-content {
+  flex: 1;
   overflow-y: scroll;
+  max-height: 100%;
 }
 
 .panel {
   width: 75%;
   height: 100%;
-  background: #979dac;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
 }
 
 .panel-content {
   max-height: 100%;
+  height: 100%;
   overflow-y: scroll;
-  padding: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 .panel-header {
-  padding: 0.5rem;
+  background-color: #353535;
+  padding: 1rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  color: #ffffff;
 }

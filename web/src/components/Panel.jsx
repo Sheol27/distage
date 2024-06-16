@@ -14,10 +14,10 @@ function Panel({ headerText, logs }) {
   return (
     <>
       <div className="panel">
-        <div className="panel-header">{headerText}</div>
+        <div className="panel-header">{headerText ?? "No client selected"}</div>
         <div className="panel-content">
-          {logs.map((x) => (
-            <p>
+          {logs.map((x, i) => (
+            <p key={i}>
               <b>{formatDate(x.timestamp)}: </b>
               {x.message}
             </p>
