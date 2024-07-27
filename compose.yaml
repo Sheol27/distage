@@ -1,8 +1,7 @@
-version: "3.9"
 services:
   client:
     depends_on:
-      - frontend
+      - backend
     build: ./apps/client
     environment:
       - WS_URL="ws://localhost:4124/socket"
@@ -14,7 +13,39 @@ services:
           path: ./apps/client
           target: /app
 
+  elastic:
+    image: elasticsearch:8.14.1
+    ports:
+      - 9200:9200
+    volumes:
+      - elastic:/usr/share/elasticsearch/data
+    logging:
+      driver: "none"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -u elastic:elastic -f http://localhost:9200/_cluster/health || exit 1",
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 20
+    environment:
+      - ELASTIC_PASSWORD=elastic
+      - "discovery.type=single-node"
+      - "xpack.security.http.ssl.enabled=false"
+      - "xpack.license.self_generated.type=trial"
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
   backend:
+    depends_on:
+      elastic:
+        condition: service_healthy
+
     build: ./apps/backend
     ports:
       - "4123:4000"
@@ -33,3 +64,6 @@ services:
       - 5174:5173
     volumes:
       - ./web/src:/app/src
+
+volumes:
+  elastic:

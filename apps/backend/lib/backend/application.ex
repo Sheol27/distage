@@ -8,6 +8,7 @@ defmodule Backend.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      Backend.ElasticsearchCluster,
       Backend.Registry,
       BackendWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:backend, :dns_cluster_query) || :ignore},

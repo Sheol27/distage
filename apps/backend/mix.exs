@@ -44,7 +44,9 @@ defmodule Backend.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:grpc, "~> 0.7"},
       {:protobuf, "~> 0.11"},
-      {:uuid, "~> 1.1"}
+      {:uuid, "~> 1.1"},
+      {:elasticsearch, "~> 1.0.0"},
+      {:poison, "~> 6.0"}
     ]
   end
 
