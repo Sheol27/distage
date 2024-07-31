@@ -16,8 +16,6 @@ defmodule Backend.LogsService do
         "logs"
       )
 
-    # IO.inspect(result)
-
     case result do
       {:ok, _map} ->
         :ok
