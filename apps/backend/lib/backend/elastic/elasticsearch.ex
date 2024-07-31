@@ -1,18 +1,10 @@
 defmodule Backend.Elasticsearch do
   alias Backend.ElasticsearchCluster
 
-  def search_documents(query) do
-    body = %{
-      query: %{
-        match: %{
-          _all: query
-        }
-      }
-    }
-
-    Elasticsearch.post(ElasticsearchCluster, "/logs/_search", body)
-  end
-
+  @doc """
+  Get all the documents stored
+  """
+  @spec get_documents(String.t()) :: {:ok, map()} | {:error, any()}
   def get_documents(agent_id) do
     body = %{
       query: %{
@@ -22,6 +14,16 @@ defmodule Backend.Elasticsearch do
       }
     }
 
-    Elasticsearch.post(ElasticsearchCluster, "/logs/_search", body)
+    case Elasticsearch.post(ElasticsearchCluster, "/logs/_search", body) do
+      {:ok, response} ->
+        {:ok, extract_content(response)}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  def extract_content(payload) do
+    Enum.map(payload["hits"]["hits"], fn map -> map["_source"] end)
   end
 end
